@@ -34,6 +34,11 @@ export class AppComponent implements OnInit {
       ]
     }
   ];
+  coordinates = [
+    [76.9658243346941, 8.611538817290826],
+    [77.0653940758712, 8.628240666373555],
+    [77.06610856914463, 8.582119568825444]
+  ]
 
   ngOnInit() {
     this.interval = setInterval(() => {
