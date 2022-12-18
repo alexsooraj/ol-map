@@ -1,6 +1,6 @@
-<ol-map [viewCorners]="this.corners">
+<ol-map [viewCorners]="this.corners" (featureClicked)="onFeatureClick($event)">
   <ol-layer *ngFor="let layer of layers">
-    <ol-feature *ngFor="let marker of layer.markers" [coordinate]="marker.coordinate"></ol-feature>
+    <ol-feature [id]="marker.id" [text]="marker.text" *ngFor="let marker of layer.markers" [coordinate]="marker.coordinate"></ol-feature>
   </ol-layer>
 </ol-map>
 <div>

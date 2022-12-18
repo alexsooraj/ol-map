@@ -1,6 +1,14 @@
 import { Component, OnInit } from '@angular/core';
 import { Coordinate } from 'ol/coordinate';
 
+interface ILayer {
+  markers: {
+    id: string;
+    text?: string;
+    coordinate: number[]
+  }[]
+}
+
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
@@ -12,13 +20,15 @@ export class AppComponent implements OnInit {
   zoom = 1;
   interval: any;
   corners?: Coordinate[];
-  layers = [
+  layers: ILayer[] = [
     {
       markers: [
         {
+          id: '1',
           coordinate: [78.9629, 20.5937]
         },
         {
+          id: '2',
           coordinate: [104.1954, 35.8617]
         }
       ]
@@ -47,12 +57,19 @@ export class AppComponent implements OnInit {
     this.layers.push({
       markers: [
         {
+          id: '3',
+          text: 'Hello',
           coordinate: [77.00486628856416, 8.60679555949417]
         },
         {
+          id: '4',
           coordinate: [77.06365887792141, 8.596804247598863]
         }
       ]
     })
+  }
+
+  onFeatureClick(featureId: string) {
+    console.log('feature clicked', featureId);
   }
 }
