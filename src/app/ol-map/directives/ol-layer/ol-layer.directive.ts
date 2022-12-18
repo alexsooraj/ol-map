@@ -3,7 +3,8 @@ import { Feature } from 'ol';
 import Layer from 'ol/layer/Layer';
 import VectorLayer from 'ol/layer/Vector';
 import VectorSource from 'ol/source/Vector';
-import { OlFeatureDirective } from '../ol-marker/ol-feature.directive';
+import { OlMarkerDirective } from '../ol-marker/ol-marker.directive';
+import { OlPolygonDirective } from '../ol-polygon/ol-polygon.directive';
 
 @Directive({
   selector: 'ol-layer'
@@ -11,8 +12,11 @@ import { OlFeatureDirective } from '../ol-marker/ol-feature.directive';
 export class OlLayerDirective implements AfterContentInit {
 
   layer: VectorLayer<VectorSource>;
-  private prevFeatures!: Feature[];
-  @ContentChildren(OlFeatureDirective) features!: QueryList<OlFeatureDirective>;
+  private prevMarkers!: Feature[];
+  @ContentChildren(OlMarkerDirective) markers!: QueryList<OlMarkerDirective>;
+
+  private prevPolygons!: Feature[];
+  @ContentChildren(OlPolygonDirective) polygons!: QueryList<OlPolygonDirective>;
 
   @Input() set visible(val: boolean) {
     this.layer.setVisible(val);
@@ -28,16 +32,35 @@ export class OlLayerDirective implements AfterContentInit {
   }
 
   ngAfterContentInit(): void {
-    const features = this.features.map(f => f.feature);
-    this.prevFeatures = features;
-    this.addFeatures(features);
-    this.features.changes.subscribe(() => {
-      const newFeatures = this.features.map(f => f.feature);
-      const added = newFeatures.filter(x => !this.prevFeatures.includes(x));
-      const removed = this.prevFeatures.filter(x => !newFeatures.includes(x));
+    this.initMarkers();
+    this.initPolygons();
+  }
+
+  private initMarkers() {
+    const markers = this.markers.map(m => m.feature);
+    this.prevMarkers = markers;
+    this.addFeatures(markers);
+    this.markers.changes.subscribe(() => {
+      const newMarkers = this.markers.map(f => f.feature);
+      const added = newMarkers.filter(x => !this.prevMarkers.includes(x));
+      const removed = this.prevMarkers.filter(x => !newMarkers.includes(x));
       this.addFeatures(added);
       this.removeFeatures(removed);
-      this.prevFeatures = newFeatures;
+      this.prevMarkers = newMarkers;
+    });
+  }
+
+  private initPolygons() {
+    const polygons = this.polygons.map(p => p.feature);
+    this.prevPolygons = polygons;
+    this.addFeatures(polygons);
+    this.polygons.changes.subscribe(() => {
+      const newPolygons = this.polygons.map(p => p.feature);
+      const added = newPolygons.filter(x => !this.prevMarkers.includes(x));
+      const removed = this.prevPolygons.filter(x => !newPolygons.includes(x));
+      this.addFeatures(added);
+      this.removeFeatures(removed);
+      this.prevPolygons = newPolygons;
     });
   }
 

@@ -1,4 +1,4 @@
-import { AfterContentInit, ContentChildren, Directive, ElementRef, Input, OnInit, QueryList } from '@angular/core';
+import { AfterContentInit, ContentChildren, Directive, ElementRef, EventEmitter, Input, OnInit, Output, QueryList } from '@angular/core';
 import { Map, View } from 'ol';
 import { Coordinate } from 'ol/coordinate';
 import { boundingExtent } from 'ol/extent';
@@ -10,6 +10,7 @@ import OSM from 'ol/source/OSM';
 import VectorSource from 'ol/source/Vector';
 import { OlLayerDirective } from '../ol-layer/ol-layer.directive';
 import { easeOut } from 'ol/easing';
+import { MapBrowserEvent } from 'ol';
 
 @Directive({
   selector: 'ol-map'
@@ -36,7 +37,11 @@ export class OlMapDirective implements OnInit, AfterContentInit {
     val && this.panTo(val);
   }
 
-  constructor(private elementRef: ElementRef) { }
+  @Output() featureClicked: EventEmitter<string>;
+
+  constructor(private elementRef: ElementRef) {
+    this.featureClicked = new EventEmitter();
+  }
 
   ngOnInit(): void {
     this.initMap();
@@ -56,6 +61,11 @@ export class OlMapDirective implements OnInit, AfterContentInit {
     this.map.setTarget(this.elementRef.nativeElement);
 
     this.map.getView().setZoom(this._zoom);
+    this.map.on('click', (event: MapBrowserEvent<any>)=>{
+      this.map?.forEachFeatureAtPixel(event.pixel, (feature, layer)=>{
+        this.featureClicked.emit(String(feature.getId()));
+      });
+    });
   }
 
   panTo(corners: Coordinate[]) {
