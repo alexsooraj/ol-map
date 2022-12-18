@@ -1,5 +1,6 @@
-import { Directive } from '@angular/core';
+import { Directive, Input } from '@angular/core';
 import { Feature } from 'ol';
+import { Coordinate } from 'ol/coordinate';
 import { Point } from 'ol/geom';
 import { fromLonLat } from 'ol/proj';
 import Icon from 'ol/style/Icon';
@@ -10,11 +11,13 @@ import Style from 'ol/style/Style';
 })
 export class OlFeatureDirective {
 
+  @Input() set coordinate(val: Coordinate) {
+    this.feature.setGeometry(new Point(fromLonLat(val)))
+  }
+
   feature: Feature;
   constructor() {
-    this.feature = new Feature({
-      geometry: new Point(fromLonLat([78.9629, 20.5937]))
-    });
+    this.feature = new Feature();
     this.feature.setStyle(this.getStyle());
   }
 

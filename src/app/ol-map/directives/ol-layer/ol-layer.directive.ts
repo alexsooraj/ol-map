@@ -10,10 +10,13 @@ import { OlFeatureDirective } from '../ol-marker/ol-feature.directive';
 })
 export class OlLayerDirective implements AfterContentInit {
 
-  @Input() name!: string;
   layer: VectorLayer<VectorSource>;
   private prevFeatures!: Feature[];
   @ContentChildren(OlFeatureDirective) features!: QueryList<OlFeatureDirective>;
+
+  @Input() set visible(val: boolean) {
+    this.layer.setVisible(val);
+  }
 
   constructor() {
     this.layer = new VectorLayer({

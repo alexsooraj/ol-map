@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Coordinate } from 'ol/coordinate';
 
 @Component({
   selector: 'app-root',
@@ -8,14 +9,50 @@ import { Component, OnInit } from '@angular/core';
 export class AppComponent implements OnInit {
   title = 'ol-map';
   show = false;
+  zoom = 1;
+  interval: any;
+  corners?: Coordinate[];
+  layers = [
+    {
+      markers: [
+        {
+          coordinate: [78.9629, 20.5937]
+        },
+        {
+          coordinate: [104.1954, 35.8617]
+        }
+      ]
+    }
+  ];
+
   ngOnInit() {
+    this.interval = setInterval(() => {
+      this.zoom === 30 && clearInterval(this.interval);
+      this.zoom++;
+    }, 1000);
+  }
+  onClick() {
+    // this.show = !this.show;
+    this.corners = [
+      [76.95939389523315, 8.632075427792222],
+      [76.95413726615, 8.577224549628795],
+      [77.08136810405594, 8.632529541696169],
+      [77.08218466779701, 8.585450164365161]
+    ]
     setTimeout(() => {
-      console.log('setTimeout');
-      this.show = true;
-    }, 3000);
-    setTimeout(() => {
-      console.log('setTimeout');
-      this.show = false;
-    }, 5000);
+      this.addNewLayer();
+    }, 5100);
+  }
+  addNewLayer() {
+    this.layers.push({
+      markers: [
+        {
+          coordinate: [77.00486628856416, 8.60679555949417]
+        },
+        {
+          coordinate: [77.06365887792141, 8.596804247598863]
+        }
+      ]
+    })
   }
 }

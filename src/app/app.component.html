@@ -1,8 +1,8 @@
-<ol-map>
-  <ol-layer name="1">
-    <ol-feature></ol-feature>
+<ol-map [viewCorners]="this.corners">
+  <ol-layer *ngFor="let layer of layers">
+    <ol-feature *ngFor="let marker of layer.markers" [coordinate]="marker.coordinate"></ol-feature>
   </ol-layer>
-  <ol-layer *ngIf="show" name="2"></ol-layer>
-  <ol-layer name="3"></ol-layer>
-  <ol-layer name="4"></ol-layer>
 </ol-map>
+<div>
+  <button (click)="onClick()">Test</button>
+</div>
